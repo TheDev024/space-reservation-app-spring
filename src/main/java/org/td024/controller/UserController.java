@@ -22,14 +22,20 @@ public class UserController {
 
     @GetMapping
     public String index(Model model) {
-        List<Reservation> reservations = reservationService.getAllReservations();
-        model.addAttribute("reservations", reservations);
+        uploadData(model);
         return "user";
     }
 
     @PostMapping("/cancel-reservation/{id}")
-    public String cancelReservation(@PathVariable("id") int id) {
+    public String cancelReservation(@PathVariable("id") int id, Model model) {
         reservationService.cancelReservation(id);
-        return "redirect:/user";
+        model.addAttribute("success", "Reservation cancelled successfully!");
+        uploadData(model);
+        return "user";
+    }
+
+    private void uploadData(Model model) {
+        List<Reservation> reservations = reservationService.getAllReservations();
+        model.addAttribute("reservations", reservations);
     }
 }

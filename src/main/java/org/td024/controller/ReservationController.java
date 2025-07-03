@@ -64,6 +64,20 @@ public class ReservationController {
         return "redirect:/user";
     }
 
+    @ExceptionHandler(InvalidTimeIntervalException.class)
+    public String handleInvalidTimeIntervalException(InvalidTimeIntervalException e, Model model) {
+        System.out.println(e.getLocalizedMessage());
+        model.addAttribute("error", "Invalid Time Interval!");
+        return "make-reservation";
+    }
+
+    @ExceptionHandler(ParseException.class)
+    public String handleParseException(ParseException e, Model model) {
+        System.out.println(e.getLocalizedMessage());
+        model.addAttribute("error", "Invalid Date!");
+        return "make-reservation";
+    }
+
     private Date parseDate(int day, int month, int year, String hour) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String dateStr = String.format("%4d-%02d-%02d %5s", year, month, day, hour);
