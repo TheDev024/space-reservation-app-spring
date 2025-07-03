@@ -8,7 +8,7 @@ import org.td024.exception.WorkspaceIsReservedException;
 import java.util.List;
 
 @Repository
-public final class WorkspaceRepo extends Repo<Workspace> {
+public class WorkspaceRepo extends Repo<Workspace> {
     private final ReservationRepo reservationRepository;
 
     public WorkspaceRepo(ReservationRepo reservationRepository) {

@@ -1,8 +1,8 @@
 package org.td024.dao;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.td024.entity.IEntity;
 
 import java.util.List;
@@ -39,32 +39,26 @@ public abstract class Repo<T extends IEntity> {
      *
      * @return id of the created/updated entity, if not successful, -1
      */
+    @Transactional
     public int save(T entity) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-
-        entityManager.persist(entity);
-
-        transaction.commit();
-
+        if (entity.getId() == 0) entityManager.persist(entity);
+        else {
+            entityManager.merge(entity);
+            return entity.getId();
+        }
         return getLastId();
     }
 
     /**
      * @return if delete is successful, true, otherwise, false
      */
+    @Transactional
     public boolean delete(int id) {
         boolean result = false;
-
         T entity = entityManager.find(clazz, id);
 
         if (entity != null) {
-            EntityTransaction transaction = entityManager.getTransaction();
-
-            transaction.begin();
             entityManager.remove(entity);
-            transaction.commit();
-
             result = true;
         }
 
