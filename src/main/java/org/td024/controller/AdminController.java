@@ -1,11 +1,13 @@
 package org.td024.controller;
 
 import jakarta.validation.Valid;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.td024.entity.Reservation;
 import org.td024.entity.Workspace;
+import org.td024.exception.WorkspaceIsReservedException;
 import org.td024.exception.WorkspaceSaveFailed;
 import org.td024.model.CreateWorkspace;
 import org.td024.service.ReservationService;
@@ -33,21 +35,49 @@ public class AdminController {
     @PostMapping("/create-workspace")
     public String createWorkspace(Model model, @ModelAttribute @Valid CreateWorkspace createWorkspace) {
         int id = workspaceService.createWorkspace(modelToWorkspace(createWorkspace));
-        if (id != -1) model.addAttribute("success", "Workspace created successfully! ID: " + id);
-        else model.addAttribute("error", "Workspace creation failed!");
-        return "redirect:/admin";
+        model.addAttribute("success", "Workspace created successfully! ID: " + id);
+        uploadData(model);
+        return "admin";
     }
 
     @PostMapping("/edit-workspace/{id}")
-    public String editWorkspace(@ModelAttribute("editWorkspace") @Valid CreateWorkspace createWorkspace, @PathVariable("id") int id) throws WorkspaceSaveFailed {
+    public String editWorkspace(@ModelAttribute("editWorkspace") @Valid CreateWorkspace createWorkspace, @PathVariable("id") int id, Model model) throws WorkspaceSaveFailed {
         workspaceService.editWorkspace(id, modelToWorkspace(createWorkspace));
-        return "redirect:/admin";
+        model.addAttribute("success", "Workspace edited successfully!");
+        uploadData(model);
+        return "admin";
     }
 
     @PostMapping("/delete-workspace/{id}")
-    public String deleteWorkspace(@PathVariable("id") int id) {
+    public String deleteWorkspace(@PathVariable("id") int id, Model model) {
         workspaceService.deleteWorkspace(id);
-        return "redirect:/admin";
+        model.addAttribute("success", "Workspace deleted successfully!");
+        uploadData(model);
+        return "admin";
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public String handleDuplicateException(ConstraintViolationException e, Model model) {
+        System.out.println(e.getLocalizedMessage());
+        model.addAttribute("error", "Workspace already exists!");
+        uploadData(model);
+        return "admin";
+    }
+
+    @ExceptionHandler(WorkspaceSaveFailed.class)
+    public String handleNotFoundException(WorkspaceSaveFailed e, Model model) {
+        System.out.println(e.getLocalizedMessage());
+        model.addAttribute("error", "Workspace save failed!");
+        uploadData(model);
+        return "admin";
+    }
+
+    @ExceptionHandler(WorkspaceIsReservedException.class)
+    public String handleWorkspaceReservedException(WorkspaceIsReservedException e, Model model) {
+        System.out.println(e.getLocalizedMessage());
+        model.addAttribute("error", "Reserved Workspaces Cannot Be Deleted!");
+        uploadData(model);
+        return "admin";
     }
 
     private void uploadData(Model model) {
