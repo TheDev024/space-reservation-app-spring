@@ -53,13 +53,6 @@ public class WorkspaceController {
         return "redirect:/admin";
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public String handleException(Exception e, Model model) {
-//        System.out.println(e.getLocalizedMessage());
-//        model.addAttribute("error", e.getLocalizedMessage());
-//        return "redirect:/admin";
-//    }
-
     private Workspace modelToWorkspace(CreateWorkspace createWorkspace) {
         return new Workspace(createWorkspace.getName(), createWorkspace.getAddress(), createWorkspace.getType(), createWorkspace.getPrice());
     }
