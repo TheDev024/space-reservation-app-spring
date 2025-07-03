@@ -3,6 +3,8 @@ package org.td024.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.td024.entity.Reservation;
 import org.td024.service.ReservationService;
@@ -23,5 +25,11 @@ public class UserController {
         List<Reservation> reservations = reservationService.getAllReservations();
         model.addAttribute("reservations", reservations);
         return "user";
+    }
+
+    @PostMapping("/cancel-reservation/{id}")
+    public String cancelReservation(@PathVariable("id") int id) {
+        reservationService.cancelReservation(id);
+        return "redirect:/user";
     }
 }

@@ -64,12 +64,6 @@ public class ReservationController {
         return "redirect:/user";
     }
 
-    @PostMapping("/cancel/{id}")
-    public String cancel(@PathVariable("id") int id) {
-        reservationService.cancelReservation(id);
-        return "redirect:/user";
-    }
-
     private Date parseDate(int day, int month, int year, String hour) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String dateStr = String.format("%4d-%02d-%02d %5s", year, month, day, hour);

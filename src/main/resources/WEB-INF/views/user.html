@@ -45,7 +45,7 @@
             <td th:text="${reservation.interval.startTime}"></td>
             <td th:text="${reservation.interval.endTime}"></td>
             <td>
-                <form th:action="@{'/reservation/cancel/' + ${reservation.id}}" method="post">
+                <form th:action="@{'/user/cancel-reservation/' + ${reservation.id}}" method="post">
                     <button class="btn btn-outline-danger" type="submit"><i class="bi bi-x-circle"></i></button>
                 </form>
             </td>
