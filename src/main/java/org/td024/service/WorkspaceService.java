@@ -51,20 +51,19 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public int editWorkspace(int id, Workspace workspace) throws WorkspaceSaveFailed {
+    public void editWorkspace(int id, Workspace workspace) throws WorkspaceSaveFailed {
         if (!workspaceExists(id)) {
             System.out.println("Workspace not found!");
             throw new WorkspaceSaveFailed("Couldn't save workspace!");
         }
 
         workspace.setId(id);
-        id = repository.save(workspace);
-        return id;
+        repository.save(workspace);
     }
 
     @Transactional
-    public boolean deleteWorkspace(int id) {
-        return repository.delete(id);
+    public void deleteWorkspace(int id) {
+        repository.delete(id);
     }
 
     public boolean workspaceExists(int id) {
