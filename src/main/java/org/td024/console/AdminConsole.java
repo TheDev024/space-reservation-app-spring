@@ -1,20 +1,6 @@
-package org.td024.console;
+//package org.td024.console;
 
-import org.springframework.stereotype.Component;
-import org.td024.entity.Workspace;
-import org.td024.enums.WorkspaceType;
-import org.td024.exception.InvalidInputException;
-import org.td024.exception.NotFoundException;
-import org.td024.exception.WorkspaceIsReservedException;
-import org.td024.exception.WorkspaceSaveFailed;
-import org.td024.service.WorkspaceService;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.td024.console.util.ConsoleReader.*;
-
-@Component
+/*@Component
 public class AdminConsole {
 
     private final WorkspaceService workspaceService;
@@ -27,48 +13,6 @@ public class AdminConsole {
         this.reservationConsole = reservationConsole;
     }
 
-
-    public void menu() {
-        System.out.println("\n== Welcome to the ADMIN CONSOLE ==");
-        boolean active = true;
-        while (active) {
-            String option = readLine("\nPlease select an option:\n1 - Create a new workspace\n2 - Edit a workspace\n3 - Delete a workspace\n4 - List all workspaces\n5 - List all available workspaces\n6 - List all reservations\n\n0 - Back\n\n> ");
-
-            switch (option) {
-                case "1":
-                    createWorkspace();
-                    break;
-
-                case "2":
-                    editWorkspace();
-                    break;
-
-                case "3":
-                    deleteWorkspace();
-                    break;
-
-                case "4":
-                    workspaceConsole.listWorkspaces();
-                    break;
-
-                case "5":
-                    workspaceConsole.listAvailableWorkspaces();
-                    break;
-
-                case "6":
-                    reservationConsole.listReservations();
-                    break;
-
-                case "0":
-                    active = false;
-                    break;
-
-                default:
-                    System.out.println("Invalid option!");
-                    break;
-            }
-        }
-    }
 
     private void createWorkspace() {
         System.out.println("\n== Create a new workspace ==\n");
@@ -209,4 +153,4 @@ public class AdminConsole {
 
         return type;
     }
-}
+}*/

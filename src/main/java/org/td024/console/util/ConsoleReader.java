@@ -1,12 +1,12 @@
-package org.td024.console.util;
+//package org.td024.console.util;
 
-import org.td024.exception.InvalidInputException;
+//import org.td024.exception.InvalidInputException;
 
-import java.math.BigDecimal;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+//import java.math.BigDecimal;
+//import java.util.InputMismatchException;
+//import java.util.Scanner;
 
-public final class ConsoleReader {
+/*public final class ConsoleReader {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static String readLine() {
@@ -51,4 +51,4 @@ public final class ConsoleReader {
         System.out.print(prompt);
         return readBigDecimal();
     }
-}
+}*/

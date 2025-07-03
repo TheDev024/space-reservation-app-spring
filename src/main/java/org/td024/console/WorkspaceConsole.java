@@ -1,16 +1,16 @@
-package org.td024.console;
+//package org.td024.console;
 
-import org.springframework.stereotype.Component;
-import org.td024.entity.Interval;
-import org.td024.entity.Workspace;
-import org.td024.exception.DatetimeParseException;
-import org.td024.exception.InvalidTimeIntervalException;
-import org.td024.service.WorkspaceService;
+//import org.springframework.stereotype.Component;
+//import org.td024.entity.Interval;
+//import org.td024.entity.Workspace;
+//import org.td024.exception.DatetimeParseException;
+//import org.td024.exception.InvalidTimeIntervalException;
+//import org.td024.service.WorkspaceService;
 
-import java.util.List;
-import java.util.Objects;
+//import java.util.List;
+//import java.util.Objects;
 
-@Component
+/*@Component
 public class WorkspaceConsole {
     private final WorkspaceService workspaceService;
     private final IntervalConsole intervalConsole;
@@ -54,4 +54,4 @@ public class WorkspaceConsole {
                 System.out.printf("%3d: %-30s %-10s %3.2f\n", workspace.getId(), workspace.getName(), workspace.getType(), workspace.getPrice());
         }
     }
-}
+}*/

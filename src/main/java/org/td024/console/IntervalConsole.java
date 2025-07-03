@@ -1,19 +1,19 @@
-package org.td024.console;
+//package org.td024.console;
 
-import org.springframework.stereotype.Component;
-import org.td024.entity.Interval;
-import org.td024.entity.Interval.IntervalBuilder;
-import org.td024.exception.DatetimeParseException;
-import org.td024.exception.InvalidTimeIntervalException;
+//import org.springframework.stereotype.Component;
+//import org.td024.entity.Interval;
+//import org.td024.entity.Interval.IntervalBuilder;
+//import org.td024.exception.DatetimeParseException;
+//import org.td024.exception.InvalidTimeIntervalException;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+//import java.text.DateFormat;
+//import java.text.ParseException;
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
 
-import static org.td024.console.util.ConsoleReader.readLine;
+//import static org.td024.console.util.ConsoleReader.readLine;
 
-@Component
+/*@Component
 public class IntervalConsole {
 
     public Interval getInterval() throws InvalidTimeIntervalException, DatetimeParseException {
@@ -35,4 +35,4 @@ public class IntervalConsole {
 
         return new IntervalBuilder().startTime(startTime).endTime(endTime).build();
     }
-}
+}*/

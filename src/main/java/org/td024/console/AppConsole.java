@@ -1,10 +1,10 @@
-package org.td024.console;
+//package org.td024.console;
 
-import org.springframework.stereotype.Component;
+//import org.springframework.stereotype.Component;
 
-import java.util.Scanner;
+//import java.util.Scanner;
 
-@Component
+/*@Component
 public class AppConsole {
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -45,4 +45,4 @@ public class AppConsole {
 
         System.out.println("\nGoodbye!");
     }
-}
+}*/

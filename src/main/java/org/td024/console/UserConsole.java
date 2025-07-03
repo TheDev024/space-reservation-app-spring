@@ -1,22 +1,22 @@
-package org.td024.console;
+//package org.td024.console;
 
-import org.springframework.stereotype.Component;
-import org.td024.entity.Interval;
-import org.td024.entity.Reservation;
-import org.td024.entity.Workspace;
-import org.td024.exception.DatetimeParseException;
-import org.td024.exception.InvalidInputException;
-import org.td024.exception.InvalidTimeIntervalException;
-import org.td024.service.ReservationService;
-import org.td024.service.WorkspaceService;
+//import org.springframework.stereotype.Component;
+//import org.td024.entity.Interval;
+//import org.td024.entity.Reservation;
+//import org.td024.entity.Workspace;
+//import org.td024.exception.DatetimeParseException;
+//import org.td024.exception.InvalidInputException;
+//import org.td024.exception.InvalidTimeIntervalException;
+//import org.td024.service.ReservationService;
+//import org.td024.service.WorkspaceService;
 
-import java.util.Date;
-import java.util.List;
+//import java.util.Date;
+//import java.util.List;
 
-import static org.td024.console.util.ConsoleReader.readInt;
-import static org.td024.console.util.ConsoleReader.readLine;
+//import static org.td024.console.util.ConsoleReader.readInt;
+//import static org.td024.console.util.ConsoleReader.readLine;
 
-@Component
+/*@Component
 public class UserConsole {
     private final WorkspaceConsole workspaceConsole;
     private final ReservationConsole reservationConsole;
@@ -134,4 +134,4 @@ public class UserConsole {
 
         reservationService.cancelReservation(id);
     }
-}
+}*/

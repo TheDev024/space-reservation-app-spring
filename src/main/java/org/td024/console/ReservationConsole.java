@@ -1,16 +1,16 @@
-package org.td024.console;
+//package org.td024.console;
 
-import org.springframework.stereotype.Component;
-import org.td024.entity.Reservation;
-import org.td024.entity.Workspace;
-import org.td024.service.ReservationService;
+//import org.springframework.stereotype.Component;
+//import org.td024.entity.Reservation;
+//import org.td024.entity.Workspace;
+//import org.td024.service.ReservationService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Objects;
+//import java.text.DateFormat;
+//import java.text.SimpleDateFormat;
+//import java.util.List;
+//import java.util.Objects;
 
-@Component
+/*@Component
 public class ReservationConsole {
     private final ReservationService reservationService;
 
@@ -43,4 +43,4 @@ public class ReservationConsole {
             }
         }
     }
-}
+}*/
