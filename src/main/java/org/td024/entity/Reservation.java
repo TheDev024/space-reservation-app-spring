@@ -6,13 +6,13 @@ import jakarta.persistence.*;
 public class Reservation implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false, unique = true, length = 100)
     private String name;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_reservation_workspace"))
     private Workspace workspace;
 
     @Embedded
@@ -37,6 +37,10 @@ public class Reservation implements IEntity {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Workspace getWorkspace() {

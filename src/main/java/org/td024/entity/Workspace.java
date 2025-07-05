@@ -25,7 +25,7 @@ public class Workspace implements IEntity {
     @Column(nullable = false)
     private BigDecimal price;
 
-    protected Workspace() {
+    public Workspace() {
     }
 
     public Workspace(String name, String address, WorkspaceType type, BigDecimal price) {

@@ -5,9 +5,14 @@ import org.td024.dao.ReservationRepo;
 import org.td024.entity.Interval;
 import org.td024.entity.Reservation;
 import org.td024.entity.Workspace;
+import org.td024.exception.NoContentException;
 import org.td024.exception.NotFoundException;
+import org.td024.exception.WorkspaceIsReservedException;
+import org.td024.model.EditReservation;
+import org.td024.model.MakeReservation;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public final class ReservationService {
@@ -20,34 +25,40 @@ public final class ReservationService {
         this.workspaceService = workspaceService;
     }
 
-    public List<Reservation> getAllReservations() {
-        return repository.getAll();
+    public List<Reservation> getAllReservations(Integer workspaceId) throws NoContentException {
+        List<Reservation> reservations = workspaceId == null ? repository.findAll() : repository.findAllByWorkspaceId(workspaceId);
+        if (reservations.isEmpty()) throw new NoContentException("No Reservations Made Yet");
+        return reservations;
     }
 
-    public void makeReservation(String name, int spaceId, Interval interval) {
-        Workspace workspace;
+    public Reservation getReservationById(int id) throws NotFoundException {
+        Optional<Reservation> reservation = repository.findById(id);
+        if (reservation.isEmpty()) throw new NotFoundException("Reservation Not Found!");
+        return reservation.get();
+    }
 
-        try {
-            workspace = workspaceService.getWorkspaceById(spaceId);
-        } catch (NotFoundException e) {
-            System.out.println("Workspace not found!");
-            return;
-        }
+    public int makeReservation(MakeReservation makeReservation) throws NotFoundException {
+        int spaceId = makeReservation.getWorkspaceId();
+        Interval interval = makeReservation.getInterval();
 
-        if (!workspaceService.isAvailable(spaceId, interval)) {
-            System.out.println("Workspace is not available!");
-            return;
-        }
+        if (!workspaceService.isAvailable(spaceId, interval)) throw new WorkspaceIsReservedException("Workspace is reserved!");
+        Workspace workspace = workspaceService.getWorkspaceById(spaceId);
+
+        String name = makeReservation.getName();
 
         Reservation reservation = new Reservation(name, workspace, interval);
-        int id = repository.save(reservation);
+        reservation = repository.save(reservation);
 
-        System.out.println("Reservation created successfully!\nReservation ID: " + id);
+        return reservation.getId();
+    }
+
+    public void editReservation(int id, EditReservation editReservation) throws NotFoundException {
+        Reservation reservation = getReservationById(id);
+        reservation.setName(editReservation.getName());
+        repository.save(reservation);
     }
 
     public void cancelReservation(int id) {
-        boolean deleted = repository.delete(id);
-        if (deleted) System.out.println("Reservation cancelled successfully!");
-        else System.out.println("Reservation not found!");
+        repository.deleteById(id);
     }
 }
