@@ -3,12 +3,13 @@ package org.td024.service;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.td024.dao.WorkspaceRepo;
+import org.td024.dto.CreateWorkspace;
+import org.td024.dto.EditWorkspace;
 import org.td024.entity.Interval;
 import org.td024.entity.Workspace;
 import org.td024.exception.NoContentException;
 import org.td024.exception.NotFoundException;
-import org.td024.model.CreateWorkspace;
-import org.td024.model.EditWorkspace;
+import org.td024.exception.WorkspaceIsReservedException;
 
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ public class WorkspaceService {
         this.repository = repository;
     }
 
-    public List<Workspace> getAllWorkspaces() throws NoContentException {
+    public List<Workspace> getAllWorkspaces() {
         List<Workspace> workspaces = repository.findAll();
         if (workspaces.isEmpty()) throw new NoContentException("No Workspace Exists Yet!");
         return workspaces;
@@ -33,7 +34,7 @@ public class WorkspaceService {
         return repository.findAvailableWorkspaces(startTime, endTime);
     }
 
-    public Workspace getWorkspaceById(int id) throws NotFoundException {
+    public Workspace getWorkspaceById(int id) {
         Optional<Workspace> workspace = repository.findById(id);
         if (workspace.isEmpty()) throw new NotFoundException("Workspace not found!");
         return workspace.get();
@@ -47,7 +48,7 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public void editWorkspace(int id, EditWorkspace createWorkspace) throws NotFoundException {
+    public void editWorkspace(int id, EditWorkspace createWorkspace) {
         if (!repository.existsById(id)) throw new NotFoundException("Workspace not found!");
 
         Workspace workspace = getWorkspaceById(id);
@@ -60,6 +61,7 @@ public class WorkspaceService {
 
     @Transactional
     public void deleteWorkspace(int id) {
+        if (repository.isReserved(id)) throw new WorkspaceIsReservedException("Reserved Workspace Cannot Be Deleted!");
         repository.deleteById(id);
     }
 

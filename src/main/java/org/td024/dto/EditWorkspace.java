@@ -1,4 +1,4 @@
-package org.td024.model;
+package org.td024.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

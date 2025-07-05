@@ -8,8 +8,8 @@ import org.td024.entity.Workspace;
 import org.td024.exception.NoContentException;
 import org.td024.exception.NotFoundException;
 import org.td024.exception.WorkspaceIsReservedException;
-import org.td024.model.EditReservation;
-import org.td024.model.MakeReservation;
+import org.td024.dto.EditReservation;
+import org.td024.dto.MakeReservation;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,23 +25,23 @@ public final class ReservationService {
         this.workspaceService = workspaceService;
     }
 
-    public List<Reservation> getAllReservations(Integer workspaceId) throws NoContentException {
+    public List<Reservation> getAllReservations(Integer workspaceId) {
         List<Reservation> reservations = workspaceId == null ? repository.findAll() : repository.findAllByWorkspaceId(workspaceId);
         if (reservations.isEmpty()) throw new NoContentException("No Reservations Made Yet");
         return reservations;
     }
 
-    public Reservation getReservationById(int id) throws NotFoundException {
+    public Reservation getReservationById(int id) {
         Optional<Reservation> reservation = repository.findById(id);
         if (reservation.isEmpty()) throw new NotFoundException("Reservation Not Found!");
         return reservation.get();
     }
 
-    public int makeReservation(MakeReservation makeReservation) throws NotFoundException {
+    public int makeReservation(MakeReservation makeReservation) {
         int spaceId = makeReservation.getWorkspaceId();
         Interval interval = makeReservation.getInterval();
 
-        if (!workspaceService.isAvailable(spaceId, interval)) throw new WorkspaceIsReservedException("Workspace is reserved!");
+        if (!workspaceService.isAvailable(spaceId, interval)) throw new WorkspaceIsReservedException("Reserved Workspace Cannot Be Reserved!");
         Workspace workspace = workspaceService.getWorkspaceById(spaceId);
 
         String name = makeReservation.getName();
@@ -52,7 +52,7 @@ public final class ReservationService {
         return reservation.getId();
     }
 
-    public void editReservation(int id, EditReservation editReservation) throws NotFoundException {
+    public void editReservation(int id, EditReservation editReservation) {
         Reservation reservation = getReservationById(id);
         reservation.setName(editReservation.getName());
         repository.save(reservation);

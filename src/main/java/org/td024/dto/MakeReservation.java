@@ -1,4 +1,4 @@
-package org.td024.model;
+package org.td024.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import org.td024.entity.Interval;

@@ -3,11 +3,9 @@ package org.td024.controller;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.td024.dto.CreateWorkspace;
+import org.td024.dto.EditWorkspace;
 import org.td024.entity.Workspace;
-import org.td024.exception.NoContentException;
-import org.td024.exception.NotFoundException;
-import org.td024.model.CreateWorkspace;
-import org.td024.model.EditWorkspace;
 import org.td024.service.WorkspaceService;
 
 import java.util.Date;
@@ -23,7 +21,7 @@ public class WorkspaceController {
     }
 
     @GetMapping
-    public List<Workspace> getAllWorkspaces() throws NoContentException {
+    public List<Workspace> getAllWorkspaces() {
         return service.getAllWorkspaces();
     }
 
@@ -33,7 +31,7 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{id}")
-    public Workspace getWorkspaceById(@PathVariable int id) throws NotFoundException {
+    public Workspace getWorkspaceById(@PathVariable int id) {
         return service.getWorkspaceById(id);
     }
 
@@ -45,7 +43,7 @@ public class WorkspaceController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void editWorkspace(@PathVariable int id, @RequestBody EditWorkspace editWorkspace) throws NotFoundException {
+    public void editWorkspace(@PathVariable int id, @RequestBody EditWorkspace editWorkspace) {
         service.editWorkspace(id, editWorkspace);
     }
 
