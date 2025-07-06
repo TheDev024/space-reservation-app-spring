@@ -1,5 +1,7 @@
 package org.td024.controller;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,7 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{id}")
+    @Cacheable(value = "workspaces", key = "#id")
     public Workspace getWorkspaceById(@PathVariable int id) {
         return service.getWorkspaceById(id);
     }
@@ -43,12 +46,14 @@ public class WorkspaceController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
+    @CacheEvict(value = "workspaces", key = "#id")
     public void editWorkspace(@PathVariable int id, @RequestBody EditWorkspace editWorkspace) {
         service.editWorkspace(id, editWorkspace);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "workspaces", key = "#id")
     public void deleteWorkspace(@PathVariable String id) {
         service.deleteWorkspace(Integer.parseInt(id));
     }
