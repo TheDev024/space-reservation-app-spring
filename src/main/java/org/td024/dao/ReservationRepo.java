@@ -7,7 +7,7 @@ import org.td024.entity.Reservation;
 import java.util.List;
 
 @Repository
-public final class ReservationRepo extends Repo<Reservation> {
+public class ReservationRepo extends Repo<Reservation> {
     public ReservationRepo() {
         super(Reservation.class);
     }

@@ -1,5 +1,6 @@
 package org.td024.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.td024.dao.ReservationRepo;
 import org.td024.dao.WorkspaceRepo;
@@ -14,7 +15,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 @Service
-public final class WorkspaceService {
+public class WorkspaceService {
 
     private final WorkspaceRepo repository;
     private ReservationRepo reservationRepository;
@@ -44,23 +45,25 @@ public final class WorkspaceService {
         return workspaces.stream().filter(workspace -> isAvailable(workspace.getId(), interval)).toList();
     }
 
+    @Transactional
     public int createWorkspace(Workspace workspace) {
         return repository.save(workspace);
     }
 
-    public int editWorkspace(int id, Workspace workspace) throws WorkspaceSaveFailed {
+    @Transactional
+    public void editWorkspace(int id, Workspace workspace) throws WorkspaceSaveFailed {
         if (!workspaceExists(id)) {
             System.out.println("Workspace not found!");
             throw new WorkspaceSaveFailed("Couldn't save workspace!");
         }
 
         workspace.setId(id);
-        id = repository.save(workspace);
-        return id;
+        repository.save(workspace);
     }
 
-    public boolean deleteWorkspace(int id) {
-        return repository.delete(id);
+    @Transactional
+    public void deleteWorkspace(int id) {
+        repository.delete(id);
     }
 
     public boolean workspaceExists(int id) {
