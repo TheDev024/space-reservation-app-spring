@@ -5,9 +5,9 @@ import org.td024.dao.ReservationRepo;
 import org.td024.entity.Interval;
 import org.td024.entity.Reservation;
 import org.td024.entity.Workspace;
+import org.td024.exception.ConflictException;
 import org.td024.exception.NoContentException;
 import org.td024.exception.NotFoundException;
-import org.td024.exception.WorkspaceIsReservedException;
 import org.td024.dto.EditReservation;
 import org.td024.dto.MakeReservation;
 
@@ -41,7 +41,7 @@ public final class ReservationService {
         int spaceId = makeReservation.getWorkspaceId();
         Interval interval = makeReservation.getInterval();
 
-        if (!workspaceService.isAvailable(spaceId, interval)) throw new WorkspaceIsReservedException("Reserved Workspace Cannot Be Reserved!");
+        if (!workspaceService.isAvailable(spaceId, interval)) throw new ConflictException("Reserved Workspace Cannot Be Reserved!");
         Workspace workspace = workspaceService.getWorkspaceById(spaceId);
 
         String name = makeReservation.getName();

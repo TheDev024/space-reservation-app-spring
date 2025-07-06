@@ -7,9 +7,9 @@ import org.td024.dto.CreateWorkspace;
 import org.td024.dto.EditWorkspace;
 import org.td024.entity.Interval;
 import org.td024.entity.Workspace;
+import org.td024.exception.ConflictException;
 import org.td024.exception.NoContentException;
 import org.td024.exception.NotFoundException;
-import org.td024.exception.WorkspaceIsReservedException;
 
 import java.util.Date;
 import java.util.List;
@@ -61,7 +61,7 @@ public class WorkspaceService {
 
     @Transactional
     public void deleteWorkspace(int id) {
-        if (repository.isReserved(id)) throw new WorkspaceIsReservedException("Reserved Workspace Cannot Be Deleted!");
+        if (repository.isReserved(id)) throw new ConflictException("Reserved Workspace Cannot Be Deleted!");
         repository.deleteById(id);
     }
 
