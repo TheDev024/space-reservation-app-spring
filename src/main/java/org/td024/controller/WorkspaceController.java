@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.td024.dto.CreateWorkspace;
 import org.td024.dto.EditWorkspace;
 import org.td024.entity.Workspace;
+import org.td024.enums.WorkspaceType;
 import org.td024.service.WorkspaceService;
 
 import java.util.Date;
@@ -23,8 +24,8 @@ public class WorkspaceController {
     }
 
     @GetMapping
-    public List<Workspace> getAllWorkspaces() {
-        return service.getAllWorkspaces();
+    public List<Workspace> getAllWorkspaces(@RequestParam(required = false) WorkspaceType type, @RequestParam(required = false) String nameQ, @RequestParam(required = false) String addressQ, @RequestParam(required = false) Double minPrice, @RequestParam(required = false) Double maxPrice) {
+        return service.getAllWorkspaces(type, nameQ, addressQ, minPrice, maxPrice);
     }
 
     @GetMapping("/available")

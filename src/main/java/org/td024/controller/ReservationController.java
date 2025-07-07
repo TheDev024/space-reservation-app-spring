@@ -10,6 +10,7 @@ import org.td024.dto.MakeReservation;
 import org.td024.entity.Reservation;
 import org.td024.service.ReservationService;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -23,8 +24,8 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<Reservation> getAllReservations(@RequestParam(required = false) Integer workspaceId) {
-        return reservationService.getAllReservations(workspaceId);
+    public List<Reservation> getAllReservations(@RequestParam(required = false) Integer workspaceId, @RequestParam(required = false) String nameQ, @RequestParam(required = false) Date startTime, @RequestParam(required = false) Date endTime) {
+        return reservationService.getAllReservations(workspaceId, nameQ, startTime, endTime);
     }
 
     @GetMapping("/{id}")

@@ -7,6 +7,7 @@ import org.td024.dto.CreateWorkspace;
 import org.td024.dto.EditWorkspace;
 import org.td024.entity.Interval;
 import org.td024.entity.Workspace;
+import org.td024.enums.WorkspaceType;
 import org.td024.exception.ConflictException;
 import org.td024.exception.NoContentException;
 import org.td024.exception.NotFoundException;
@@ -24,8 +25,8 @@ public class WorkspaceService {
         this.repository = repository;
     }
 
-    public List<Workspace> getAllWorkspaces() {
-        List<Workspace> workspaces = repository.findAll();
+    public List<Workspace> getAllWorkspaces(WorkspaceType type, String nameQ, String addressQ, Double minPrice, Double maxPrice) {
+        List<Workspace> workspaces = repository.findAll(type,  "%" + nameQ + "%", "%" + addressQ + "%", minPrice, maxPrice);
         if (workspaces.isEmpty()) throw new NoContentException("No Workspace Exists Yet!");
         return workspaces;
     }
