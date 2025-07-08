@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "address"}, name = "unique_name_address"))
-public class Workspace implements IEntity {
+public class Workspace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

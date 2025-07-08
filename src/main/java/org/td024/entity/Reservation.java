@@ -3,7 +3,7 @@ package org.td024.entity;
 import jakarta.persistence.*;
 
 @Entity
-public class Reservation implements IEntity {
+public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
