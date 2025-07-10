@@ -19,10 +19,6 @@ public class Interval implements Serializable {
         this.endTime = builder.endTime;
     }
 
-    public static boolean isOverlap(Interval interval1, Interval interval2) {
-        return !(interval1.endTime.before(interval2.startTime) || interval2.endTime.before(interval1.startTime));
-    }
-
     public Date getStartTime() {
         return startTime;
     }

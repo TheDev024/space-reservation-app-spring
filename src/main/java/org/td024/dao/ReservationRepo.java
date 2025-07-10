@@ -1,21 +1,28 @@
 package org.td024.dao;
 
-import jakarta.persistence.Query;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.td024.entity.Reservation;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class ReservationRepo extends Repo<Reservation> {
-    public ReservationRepo() {
-        super(Reservation.class);
-    }
+public interface ReservationRepo extends JpaRepository<Reservation, Integer> {
+    @Query("""
+            SELECT r
+            FROM Reservation r
+            WHERE (:workspaceId IS NULL OR r.workspace.id = :workspaceId)
+                AND (:nameQ IS NULL OR r.name LIKE :nameQ)
+                AND (:startTime IS NULL OR r.interval.startTime <= :startTime)
+                AND (:endTime IS NULL OR r.interval.endTime >= :endTime)
+                AND (:username IS NULL OR r.reservedBy.username >= :username)
+            """)
+    List<Reservation> findAll(Integer workspaceId, String nameQ, Date startTime, Date endTime, String username);
 
-    public List<Reservation> getAllByWorkspace(int workspaceId) {
-        Query query = entityManager.createQuery("SELECT r FROM Reservation r WHERE r.workspace.id = :workspaceId", Reservation.class);
-        query.setParameter("workspaceId", workspaceId);
+    Optional<Reservation> findByIdAndWorkspaceId(int id, int workspaceId);
 
-        return query.getResultList();
-    }
+    boolean existsByIdAndWorkspaceId(int id, int workspaceId);
 }
