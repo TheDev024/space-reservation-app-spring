@@ -7,6 +7,7 @@ import org.td024.entity.Reservation;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReservationRepo extends JpaRepository<Reservation, Integer> {
@@ -19,4 +20,8 @@ public interface ReservationRepo extends JpaRepository<Reservation, Integer> {
                 AND (:endTime IS NULL OR r.interval.endTime >= :endTime)
             """)
     List<Reservation> findAll(Integer workspaceId, String nameQ, Date startTime, Date endTime);
+
+    Optional<Reservation> findByIdAndWorkspaceId(int id, int workspaceId);
+
+    boolean existsByIdAndWorkspaceId(int id, int workspaceId);
 }

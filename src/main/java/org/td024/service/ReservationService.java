@@ -27,24 +27,25 @@ public final class ReservationService {
     }
 
     public List<Reservation> getAllReservations(Integer workspaceId, String nameQ, Date startTime, Date endTime) {
+        nameQ = nameQ == null ? "" : nameQ;
         List<Reservation> reservations = repository.findAll(workspaceId, "%" + nameQ + "%", startTime, endTime);
+
         if (reservations.isEmpty()) throw new NoContentException("No Reservations Found For The Given Criteria!");
         return reservations;
     }
 
-    public Reservation getReservationById(int id) {
-        Optional<Reservation> reservation = repository.findById(id);
+    public Reservation getReservationById(int id, int workspaceId) {
+        Optional<Reservation> reservation = repository.findByIdAndWorkspaceId(id, workspaceId);
         if (reservation.isEmpty()) throw new NotFoundException("Reservation Not Found!");
         return reservation.get();
     }
 
-    public int makeReservation(MakeReservation makeReservation) {
-        int spaceId = makeReservation.getWorkspaceId();
+    public int makeReservation(int workspaceId, MakeReservation makeReservation) {
         Interval interval = makeReservation.getInterval();
 
-        if (!workspaceService.isAvailable(spaceId, interval))
+        if (!workspaceService.isAvailable(workspaceId, interval))
             throw new ConflictException("Reserved Workspace Cannot Be Reserved!");
-        Workspace workspace = workspaceService.getWorkspaceById(spaceId);
+        Workspace workspace = workspaceService.getWorkspaceById(workspaceId);
 
         String name = makeReservation.getName();
 
@@ -54,13 +55,16 @@ public final class ReservationService {
         return reservation.getId();
     }
 
-    public void editReservation(int id, EditReservation editReservation) {
-        Reservation reservation = getReservationById(id);
+    public void editReservation(int id, int workspaceId, EditReservation editReservation) {
+        Reservation reservation = getReservationById(id, workspaceId);
+        if (reservation.getWorkspace().getId() != workspaceId) throw new NotFoundException("Reservation Not Found!");
         reservation.setName(editReservation.getName());
         repository.save(reservation);
     }
 
-    public void cancelReservation(int id) {
+    public void cancelReservation(int id, int workspaceId) {
+        if (!repository.existsByIdAndWorkspaceId(id, workspaceId))
+            throw new NotFoundException("Reservation Not Found!");
         repository.deleteById(id);
     }
 }
