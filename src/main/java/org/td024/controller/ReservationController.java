@@ -1,5 +1,6 @@
 package org.td024.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,43 +15,48 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reservation")
+@SecurityRequirement(name = "bearer")
 public class ReservationController {
 
-    private final ReservationService reservationService;
+    private final ReservationService service;
 
-    public ReservationController(ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public ReservationController(ReservationService service) {
+        this.service = service;
     }
 
-    @GetMapping
+    @GetMapping("/reservations")
     public List<Reservation> getAllReservations(@RequestParam(required = false) Integer workspaceId, @RequestParam(required = false) String nameQ, @RequestParam(required = false) Date startTime, @RequestParam(required = false) Date endTime) {
-        return reservationService.getAllReservations(workspaceId, nameQ, startTime, endTime);
+        return service.getAllReservations(workspaceId, nameQ, startTime, endTime);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/workspaces/{workspaceId}/reservations")
+    public List<Reservation> getAllReservationsByWorkspace(@PathVariable int workspaceId, @RequestParam(required = false) String nameQ, @RequestParam(required = false) Date startTime, @RequestParam(required = false) Date endTime) {
+        return service.getAllReservations(workspaceId, nameQ, startTime, endTime);
+    }
+
+    @GetMapping("/workspaces/{workspaceId}/reservations/{id}")
     @Cacheable(value = "reservations", key = "#id")
-    public Reservation getReservationById(@PathVariable("id") int id) {
-        return reservationService.getReservationById(id);
+    public Reservation getReservationById(@PathVariable int id, @PathVariable int workspaceId) {
+        return service.getReservationById(id, workspaceId);
     }
 
-    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public int makeReservation(@RequestBody @Valid MakeReservation makeReservation) {
-        return reservationService.makeReservation(makeReservation);
+    @PostMapping("/workspaces/{workspaceId}/reservations")
+    public int makeReservation(@RequestBody @Valid MakeReservation makeReservation, @PathVariable int workspaceId) {
+        return service.makeReservation(workspaceId, makeReservation);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/workspaces/{workspaceId}/reservations/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @CacheEvict(value = "reservations", key = "#id")
-    public void editReservation(@PathVariable("id") int id, @RequestBody @Valid EditReservation editReservation) {
-        reservationService.editReservation(id, editReservation);
+    public void editReservation(@PathVariable int id, @RequestBody @Valid EditReservation editReservation, @PathVariable int workspaceId) {
+        service.editReservation(id, workspaceId, editReservation);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/workspaces/{workspaceId}/reservations/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "reservations", key = "#id")
-    public void cancelReservation(@PathVariable("id") int id) {
-        reservationService.cancelReservation(id);
+    public void cancelReservation(@PathVariable int id, @PathVariable int workspaceId) {
+        service.cancelReservation(id, workspaceId);
     }
 }

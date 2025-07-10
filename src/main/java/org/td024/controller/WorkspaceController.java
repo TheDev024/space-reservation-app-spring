@@ -1,5 +1,6 @@
 package org.td024.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,7 +16,8 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/workspace")
+@RequestMapping("/workspaces")
+@SecurityRequirement(name = "bearer")
 public class WorkspaceController {
     private final WorkspaceService service;
 

@@ -26,6 +26,9 @@ public class WorkspaceService {
     }
 
     public List<Workspace> getAllWorkspaces(WorkspaceType type, String nameQ, String addressQ, Double minPrice, Double maxPrice) {
+        nameQ = nameQ == null ? "" : nameQ;
+        addressQ = addressQ == null ? "" : addressQ;
+
         List<Workspace> workspaces = repository.findAll(type, "%" + nameQ + "%", "%" + addressQ + "%", minPrice, maxPrice);
         if (workspaces.isEmpty()) throw new NoContentException("No Workspace Exists Yet!");
         return workspaces;

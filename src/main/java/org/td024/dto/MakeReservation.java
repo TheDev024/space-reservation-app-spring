@@ -7,8 +7,6 @@ public class MakeReservation {
     @NotBlank(message = "Name must not be blank")
     private String name;
 
-    private int workspaceId;
-
     private Interval interval;
 
     public MakeReservation() {
@@ -20,14 +18,6 @@ public class MakeReservation {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getWorkspaceId() {
-        return workspaceId;
-    }
-
-    public void setWorkspaceId(int workspaceId) {
-        this.workspaceId = workspaceId;
     }
 
     public Interval getInterval() {
