@@ -12,6 +12,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  jackson:
+    time-zone: GMT+04:00
 
 server:
   port: 8080

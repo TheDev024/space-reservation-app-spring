@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +22,7 @@ import org.td024.auth.service.UserService;
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 @SecurityScheme(
         name = "bearer",
         in = SecuritySchemeIn.HEADER,
@@ -66,10 +65,10 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/javainuse-openapi/**").permitAll()
                         // Reservations
                         .requestMatchers(GET, "/reservations").hasRole(ADMIN)
-                        .requestMatchers("/workspaces/*/reservations/*").hasAnyRole(ADMIN, USER)
+                        .requestMatchers(GET, "/reservations/my").authenticated()
+                        .requestMatchers("/workspaces/*/reservations/**").authenticated()
                         // Workspaces
-                        .requestMatchers(GET, "/workspaces/available").hasAnyRole(ADMIN, USER)
-                        .requestMatchers(GET, "/workspaces/*").hasRole(ADMIN)
+                        .requestMatchers(GET, "/workspaces/*", "/workspaces").hasAnyRole(ADMIN, USER)
                         .requestMatchers(POST, "/workspaces").hasRole(ADMIN)
                         .requestMatchers(PUT, "/workspaces/*").hasRole(ADMIN)
                         .requestMatchers(DELETE, "/workspaces/*").hasRole(ADMIN)

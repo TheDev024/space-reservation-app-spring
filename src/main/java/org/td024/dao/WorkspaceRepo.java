@@ -34,17 +34,17 @@ public interface WorkspaceRepo extends JpaRepository<Workspace, Integer> {
 
     @Query("""
             SELECT (SELECT COUNT(r.id)
-                    FROM Reservation r
-                             JOIN Workspace w ON r.workspace.id = w.id
-                    WHERE r.workspace.id = w.id
-                      AND NOT (r.interval.endTime < :startTime OR :endTime < r.interval.startTime)) = 0
+            FROM Reservation r
+                JOIN Workspace w ON r.workspace.id = w.id
+            WHERE r.workspace.id = w.id
+                AND NOT (r.interval.endTime < :startTime OR :endTime < r.interval.startTime)) = 0
             """)
     boolean isWorkspaceAvailable(int id, Date startTime, Date endTime);
 
     @Query("""
             SELECT 0 < (SELECT COUNT(r.id)
-                        FROM Reservation r
-                        WHERE r.workspace.id = :id)
+            FROM Reservation r
+            WHERE r.workspace.id = :id)
             """)
     boolean isReserved(int id);
 }

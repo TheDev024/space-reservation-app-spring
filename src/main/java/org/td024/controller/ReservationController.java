@@ -5,7 +5,9 @@ import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.td024.auth.entity.AppUser;
 import org.td024.dto.EditReservation;
 import org.td024.dto.MakeReservation;
 import org.td024.entity.Reservation;
@@ -25,13 +27,30 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public List<Reservation> getAllReservations(@RequestParam(required = false) Integer workspaceId, @RequestParam(required = false) String nameQ, @RequestParam(required = false) Date startTime, @RequestParam(required = false) Date endTime) {
-        return service.getAllReservations(workspaceId, nameQ, startTime, endTime);
+    public List<Reservation> getAllReservations(
+            @RequestParam(required = false) Integer workspaceId,
+            @RequestParam(required = false) String nameQ,
+            @RequestParam(required = false) Date startTime,
+            @RequestParam(required = false) Date endTime,
+            @RequestParam(required = false) String username
+    ) {
+        return service.getAllReservations(workspaceId, nameQ, startTime, endTime, username);
+    }
+
+    @GetMapping("/reservations/my")
+    public List<Reservation> getAllReservations(
+            @RequestParam(required = false) Integer workspaceId,
+            @RequestParam(required = false) String nameQ,
+            @RequestParam(required = false) Date startTime,
+            @RequestParam(required = false) Date endTime,
+            @AuthenticationPrincipal AppUser principal
+    ) {
+        return service.getAllReservations(workspaceId, nameQ, startTime, endTime, principal.getUsername());
     }
 
     @GetMapping("/workspaces/{workspaceId}/reservations")
     public List<Reservation> getAllReservationsByWorkspace(@PathVariable int workspaceId, @RequestParam(required = false) String nameQ, @RequestParam(required = false) Date startTime, @RequestParam(required = false) Date endTime) {
-        return service.getAllReservations(workspaceId, nameQ, startTime, endTime);
+        return service.getAllReservations(workspaceId, nameQ, startTime, endTime, null);
     }
 
     @GetMapping("/workspaces/{workspaceId}/reservations/{id}")
@@ -42,8 +61,8 @@ public class ReservationController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/workspaces/{workspaceId}/reservations")
-    public int makeReservation(@RequestBody @Valid MakeReservation makeReservation, @PathVariable int workspaceId) {
-        return service.makeReservation(workspaceId, makeReservation);
+    public int makeReservation(@RequestBody @Valid MakeReservation makeReservation, @PathVariable int workspaceId, @AuthenticationPrincipal AppUser principal) {
+        return service.makeReservation(workspaceId, makeReservation, principal);
     }
 
     @PutMapping("/workspaces/{workspaceId}/reservations/{id}")

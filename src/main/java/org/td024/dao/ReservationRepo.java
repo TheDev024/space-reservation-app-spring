@@ -18,8 +18,9 @@ public interface ReservationRepo extends JpaRepository<Reservation, Integer> {
                 AND (:nameQ IS NULL OR r.name LIKE :nameQ)
                 AND (:startTime IS NULL OR r.interval.startTime <= :startTime)
                 AND (:endTime IS NULL OR r.interval.endTime >= :endTime)
+                AND (:username IS NULL OR r.reservedBy.username >= :username)
             """)
-    List<Reservation> findAll(Integer workspaceId, String nameQ, Date startTime, Date endTime);
+    List<Reservation> findAll(Integer workspaceId, String nameQ, Date startTime, Date endTime, String username);
 
     Optional<Reservation> findByIdAndWorkspaceId(int id, int workspaceId);
 
