@@ -61,6 +61,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(customizer -> customizer
                         // Authentication
                         .requestMatchers(POST, "/login", "/register").permitAll()
+                        .requestMatchers(GET, "/refresh-token").permitAll()
                         // Swagger
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/javainuse-openapi/**").permitAll()
                         // Reservations

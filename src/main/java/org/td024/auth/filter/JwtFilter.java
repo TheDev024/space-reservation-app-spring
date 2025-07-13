@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.td024.auth.dao.UserRepository;
 import org.td024.auth.entity.AppUser;
 import org.td024.auth.enums.TokenType;
+import org.td024.auth.model.TokenPayload;
 import org.td024.auth.service.JwtService;
 import org.td024.exception.CustomException;
 import org.td024.exception.GoneException;
@@ -37,20 +38,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (token != null) {
                 jwtService.validate(token);
-                String subject = jwtService.getSubject(token);
-                String[] parts = subject.split(":");
 
-                TokenType tokenType = TokenType.valueOf(parts[1]);
-                if (tokenType != TokenType.ACCESS) throw new UnauthorizedException("Unauthorized");
+                TokenPayload payload = jwtService.getPayload(token);
+                if (payload.getTokenType() != TokenType.ACCESS) throw new UnauthorizedException("Unauthorized");
 
-                if (parts.length != 3) throw new UnauthorizedException("Unauthorized");
-                String username = parts[0];
-
+                String username = payload.getUsername();
                 if (!userRepository.existsById(username)) throw new UnauthorizedException("Unauthorized");
                 AppUser user = userRepository.findById(username).get();
 
-                int sessionNo = Integer.parseInt(parts[2]);
-                if (user.getSessionNo() != sessionNo)
+                if (user.getSessionNo() != payload.getSessionNo())
                     throw new GoneException("Session Expired: You've logged in somewhere else");
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
