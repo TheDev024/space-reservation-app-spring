@@ -2,75 +2,85 @@ package org.td024.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.td024.dao.ReservationRepo;
 import org.td024.dao.WorkspaceRepo;
+import org.td024.dto.CreateWorkspace;
+import org.td024.dto.EditWorkspace;
 import org.td024.entity.Interval;
-import org.td024.entity.Reservation;
 import org.td024.entity.Workspace;
+import org.td024.enums.WorkspaceType;
+import org.td024.exception.ConflictException;
+import org.td024.exception.NoContentException;
 import org.td024.exception.NotFoundException;
-import org.td024.exception.WorkspaceSaveFailed;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 
 @Service
 public class WorkspaceService {
 
     private final WorkspaceRepo repository;
-    private ReservationRepo reservationRepository;
 
-    private final BiFunction<Integer, Interval, Boolean> isAvailable = (Integer id, Interval interval) -> {
-        List<Reservation> reservations = reservationRepository.getAllByWorkspace(id);
-        return reservations.stream().noneMatch(reservation -> Interval.isOverlap(interval, reservation.getInterval()));
-    };
-
-    public WorkspaceService(WorkspaceRepo repository, ReservationRepo reservationRepository) {
+    public WorkspaceService(WorkspaceRepo repository) {
         this.repository = repository;
-        this.reservationRepository = reservationRepository;
     }
 
-    public Workspace getWorkspaceById(int id) throws NotFoundException {
-        Optional<Workspace> workspace = repository.getById(id);
+    public List<Workspace> getAllWorkspaces(WorkspaceType type, String nameQ, String addressQ, Double minPrice, Double maxPrice) {
+        nameQ = nameQ == null ? "" : nameQ;
+        addressQ = addressQ == null ? "" : addressQ;
+
+        List<Workspace> workspaces = repository.findAll(type, "%" + nameQ + "%", "%" + addressQ + "%", minPrice, maxPrice);
+        if (workspaces.isEmpty()) throw new NoContentException("No Workspace Exists Yet!");
+        return workspaces;
+    }
+
+    public List<Workspace> getAvailableWorkspaces(Date startTime, Date endTime) {
+        return repository.findAvailableWorkspaces(startTime, endTime);
+    }
+
+    public Workspace getWorkspaceById(int id) {
+        Optional<Workspace> workspace = repository.findById(id);
         if (workspace.isEmpty()) throw new NotFoundException("Workspace not found!");
         return workspace.get();
     }
 
-    public List<Workspace> getAllWorkspaces() {
-        return repository.getAll();
-    }
-
-    public List<Workspace> getAvailableWorkspaces(Interval interval) {
-        List<Workspace> workspaces = repository.getAll();
-        return workspaces.stream().filter(workspace -> isAvailable(workspace.getId(), interval)).toList();
+    @Transactional
+    public int createWorkspace(CreateWorkspace createWorkspace) {
+        Workspace workspace = convertToWorkspace(createWorkspace);
+        workspace = repository.save(workspace);
+        return workspace.getId();
     }
 
     @Transactional
-    public int createWorkspace(Workspace workspace) {
-        return repository.save(workspace);
-    }
+    public void editWorkspace(int id, EditWorkspace createWorkspace) {
+        if (!repository.existsById(id)) throw new NotFoundException("Workspace not found!");
 
-    @Transactional
-    public void editWorkspace(int id, Workspace workspace) throws WorkspaceSaveFailed {
-        if (!workspaceExists(id)) {
-            System.out.println("Workspace not found!");
-            throw new WorkspaceSaveFailed("Couldn't save workspace!");
-        }
+        Workspace workspace = getWorkspaceById(id);
 
-        workspace.setId(id);
+        workspace.setName(createWorkspace.getName());
+        workspace.setPrice(createWorkspace.getPrice());
+
         repository.save(workspace);
     }
 
     @Transactional
     public void deleteWorkspace(int id) {
-        repository.delete(id);
-    }
-
-    public boolean workspaceExists(int id) {
-        return repository.getById(id).isPresent();
+        if (repository.isReserved(id)) throw new ConflictException("Reserved Workspace Cannot Be Deleted!");
+        repository.deleteById(id);
     }
 
     public boolean isAvailable(int id, Interval interval) {
-        return isAvailable.apply(id, interval);
+        return repository.isWorkspaceAvailable(id, interval.getStartTime(), interval.getEndTime());
+    }
+
+    private Workspace convertToWorkspace(CreateWorkspace createWorkspace) {
+        Workspace workspace = new Workspace();
+
+        workspace.setName(createWorkspace.getName());
+        workspace.setType(createWorkspace.getType());
+        workspace.setAddress(createWorkspace.getAddress());
+        workspace.setPrice(createWorkspace.getPrice());
+
+        return workspace;
     }
 }
