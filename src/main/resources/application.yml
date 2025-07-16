@@ -24,3 +24,7 @@ org:
       jwt-secret: ${JWT_SECRET}
       session-timeout: 3600
       refresh-timeout: 7200
+
+    email:
+      user: ${EMAIL_USER}
+      api_key: ${SENDGRID_API_KEY}
