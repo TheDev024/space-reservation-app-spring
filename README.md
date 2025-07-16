@@ -47,6 +47,6 @@ services:
 
 ### 4. Run The Services
 
-In the root directory of the project run the following command:
+Go to the [`docker/`](docker/) directory and run the following command:
 
 `docker compose up -d`
