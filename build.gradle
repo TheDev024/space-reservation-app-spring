@@ -52,6 +52,9 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql:42.7.5'
     runtimeOnly 'com.mysql:mysql-connector-j:9.0.0'
 
+    // DB Migration
+    implementation 'org.liquibase:liquibase-core:4.33.0'
+
     // JUnit
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'

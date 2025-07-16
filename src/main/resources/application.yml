@@ -11,9 +11,12 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
   jackson:
     time-zone: GMT+04:00
+
+  liquibase:
+    change-log: classpath:/db/changelog-master.xml
 
 server:
   port: 8080
@@ -28,3 +31,4 @@ org:
     email:
       user: ${EMAIL_USER}
       api_key: ${SENDGRID_API_KEY}
+

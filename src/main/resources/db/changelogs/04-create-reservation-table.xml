@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.33.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="04-create-reservation-table" author="thedev024">
+        <createTable tableName="reservation">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_reservation"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="workspace_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reserved_by_username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reserved_at" type="DATETIME"/>
+            <column name="start_time" type="DATETIME"/>
+            <column name="end_time" type="DATETIME"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="workspace_id" baseTableName="reservation"
+                                 constraintName="FK_RESERVATION_WORKSPACE" referencedColumnNames="id"
+                                 referencedTableName="workspace"/>
+
+        <addForeignKeyConstraint baseColumnNames="reserved_by_username" baseTableName="reservation"
+                                 constraintName="FK_RESERVED_BY" referencedColumnNames="username"
+                                 referencedTableName="app_user"/>
+    </changeSet>
+
+</databaseChangeLog>
