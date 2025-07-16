@@ -3,17 +3,20 @@ spring:
     name: space-reservation-application
 
   datasource:
-    url: jdbc:mysql://localhost:3306/space_reservation_db?createDatabaseIfNotExist=true
+    url: ${DB_URL}
     username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-
+    password: ${MYSQL_ROOT_PASSWORD}
 
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
+
   jackson:
     time-zone: GMT+04:00
+
+  liquibase:
+    change-log: classpath:/db/changelog-master.xml
 
 server:
   port: 8080
@@ -24,3 +27,7 @@ org:
       jwt-secret: ${JWT_SECRET}
       session-timeout: 3600
       refresh-timeout: 7200
+
+    email:
+      user: ${EMAIL_USER}
+      api_key: ${SENDGRID_API_KEY}

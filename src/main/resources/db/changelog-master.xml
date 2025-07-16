@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.33.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <include file="db/changelogs/01-create-workspace-table.xml"/>
+    <include file="db/changelogs/02-create-app_user-table.xml"/>
+    <include file="db/changelogs/03-add-admin-user.xml"/>
+    <include file="db/changelogs/04-create-reservation-table.xml"/>
+    <include file="db/changelogs/05-create-mailing_list-table.xml"/>
+
+</databaseChangeLog>

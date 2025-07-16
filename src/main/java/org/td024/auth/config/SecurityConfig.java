@@ -22,7 +22,6 @@ import org.td024.auth.service.UserService;
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
-//@EnableWebSecurity
 @SecurityScheme(
         name = "bearer",
         in = SecuritySchemeIn.HEADER,

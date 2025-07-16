@@ -2,6 +2,7 @@ package org.td024.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.td024.controller.MailingListService;
 import org.td024.dao.WorkspaceRepo;
 import org.td024.dto.CreateWorkspace;
 import org.td024.dto.EditWorkspace;
@@ -12,17 +13,17 @@ import org.td024.exception.ConflictException;
 import org.td024.exception.NoContentException;
 import org.td024.exception.NotFoundException;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class WorkspaceService {
 
     private final WorkspaceRepo repository;
+    private final MailingListService mailingListService;
 
-    public WorkspaceService(WorkspaceRepo repository) {
+    public WorkspaceService(WorkspaceRepo repository, MailingListService mailingListService) {
         this.repository = repository;
+        this.mailingListService = mailingListService;
     }
 
     public List<Workspace> getAllWorkspaces(WorkspaceType type, String nameQ, String addressQ, Double minPrice, Double maxPrice) {
@@ -48,6 +49,9 @@ public class WorkspaceService {
     public int createWorkspace(CreateWorkspace createWorkspace) {
         Workspace workspace = convertToWorkspace(createWorkspace);
         workspace = repository.save(workspace);
+
+        notifyWorkspaceCreated(workspace);
+
         return workspace.getId();
     }
 
@@ -67,6 +71,8 @@ public class WorkspaceService {
     public void deleteWorkspace(int id) {
         if (repository.isReserved(id)) throw new ConflictException("Reserved Workspace Cannot Be Deleted!");
         repository.deleteById(id);
+
+        notifyWorkspaceDeleted(id);
     }
 
     public boolean isAvailable(int id, Interval interval) {
@@ -82,5 +88,23 @@ public class WorkspaceService {
         workspace.setPrice(createWorkspace.getPrice());
 
         return workspace;
+    }
+
+    private void notifyWorkspaceCreated(Workspace workspace) {
+        Map<String, String> data = new HashMap<>();
+        data.put("name", workspace.getName());
+        data.put("address", workspace.getAddress());
+        data.put("price", workspace.getPrice().toString());
+        data.put("type", workspace.getType().toString());
+        mailingListService.notifyMembers("workspace-created", data);
+    }
+
+    private void notifyWorkspaceDeleted(int id) {
+        Workspace workspace = getWorkspaceById(id);
+        Map<String, String> data = new HashMap<>();
+        data.put("id", String.valueOf(id));
+        data.put("name", workspace.getName());
+        data.put("address", workspace.getAddress());
+        mailingListService.notifyMembers("workspace-deleted", data);
     }
 }

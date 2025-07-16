@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql:8
+    container_name: db
+    ports:
+      - '3306:3306'
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - sra-net
+    volumes:
+      - sra-vol:/var/lib/mysql
+
+  app:
+    image: space-reservation-app
+    container_name: space-reservation-app
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '8080:8080'
+    environment:
+      DB_URL: jdbc:mysql://db:3306/space_reservation_app?createDatabaseIfNotExist=true
+    depends_on:
+      - db
+    networks:
+      - sra-net
+
+networks:
+  sra-net:
+    external: true
+
+volumes:
+  sra-vol:
+    external: true
