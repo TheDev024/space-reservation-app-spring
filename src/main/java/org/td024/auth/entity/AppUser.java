@@ -1,7 +1,6 @@
 package org.td024.auth.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +14,9 @@ public class AppUser implements UserDetails {
 
     @Id
     private String username;
+
+    @Column(nullable = false, unique = true)
+    private String email;
 
     private String password;
 
@@ -38,6 +40,14 @@ public class AppUser implements UserDetails {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

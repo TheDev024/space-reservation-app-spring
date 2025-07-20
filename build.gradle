@@ -17,6 +17,10 @@ repositories {
     mavenCentral()
 }
 
+bootJar {
+    archiveFileName = "application.jar"
+}
+
 dependencies {
     // MVC
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -27,6 +31,9 @@ dependencies {
     // Mapstruct
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
+    // SendGrid (Email)
+    implementation 'com.sendgrid:sendgrid-java:4.10.3'
 
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -48,6 +55,9 @@ dependencies {
     // DB -> Compatible with both PostgresQL & MySQL (based on environment)
     runtimeOnly 'org.postgresql:postgresql:42.7.5'
     runtimeOnly 'com.mysql:mysql-connector-j:9.0.0'
+
+    // DB Migration
+    implementation 'org.liquibase:liquibase-core:4.33.0'
 
     // JUnit
     testImplementation platform('org.junit:junit-bom:5.10.0')
